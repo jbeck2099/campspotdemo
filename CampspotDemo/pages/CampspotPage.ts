@@ -54,7 +54,7 @@ class CampspotPage{
         expect(await this.page.locator("//div[@class='guests-picker-input-text app-guest-categories-label']").innerText()).toBe('2 Adults');
     }
 
-    async validateSearchHashNoResults(){
+    async validateSearchHasNoResults(){
         await this.page.waitForLoadState('domcontentloaded');
         // expect(await this.page.title()).toContain('Available Locations near ');
         expect(await this.page.locator("#geo-search-main>div>nav>div.search-results-none.app-no-search-results").innerText()).toBe('Sorry, there are no campgrounds available matching your current search.');
