@@ -8,7 +8,7 @@ test.describe('Default State/Behavior Tests', () => {
     test('Check results with default form values', async({campspotPage}) => {
         await campspotPage.navigateHome();
         await campspotPage.clickSearch();
-        await campspotPage.validateSearchHashNoResults();
+        await campspotPage.validateSearchHasNoResults();
     })
 });
 
@@ -28,7 +28,7 @@ test.describe('Date Tests', () => { //this should accept inputs and loop through
         await campspotPage.navigateHome();
         await campspotPage.selectDateRange();
         await campspotPage.clickSearch();
-        await campspotPage.validateSearchHashNoResults();
+        await campspotPage.validateSearchHasNoResults();
     });
 });
 
