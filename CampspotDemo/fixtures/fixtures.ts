@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test'
-import CampspotPage from '../pages/CampspotPage';
+import SearchPage from '../pages/SearchPage';
 
 const CampLocations = [
     'Canyon Lake, Texas',
@@ -10,9 +10,17 @@ const CampLocations = [
 
 export const campLocations = CampLocations;
 
-export const test = base.extend<{ campspotPage: CampspotPage }>({
-    campspotPage: async ({ page }, use) =>{
-        const campspotPage = new CampspotPage(page);
-        await use(campspotPage);
+export const test = base.extend<{ searchPage: SearchPage }>({
+    searchPage: async ({ page }, use) =>{
+        const searchPage = new SearchPage(page);
+        await use(searchPage);
     },
 });
+
+
+
+
+
+
+
+
