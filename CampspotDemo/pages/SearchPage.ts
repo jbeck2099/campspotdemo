@@ -1,8 +1,9 @@
 import { Page, Locator, expect } from '@playwright/test'
+import * as urls from '../fixtures/urls.json'
 
 class SearchPage{
     readonly page: Page;
-    readonly homepageUrl: string = '';
+    readonly homepageUrl: string = urls.testurl;
     readonly homepageTitle: string = 'Campspot - Campgrounds, RV resorts, glamping, and more.';
     readonly locationControl: Locator;
     readonly datesControl: Locator;
