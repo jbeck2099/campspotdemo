@@ -1,5 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test'
-import * as urls from '../fixtures/urls.json'
+import * as urls from '../data/urls.json'
 
 class SearchPage{
     readonly page: Page;
