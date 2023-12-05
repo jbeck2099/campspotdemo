@@ -1,15 +1,16 @@
 import { Page, Locator, expect } from '@playwright/test'
 import * as urls from '../data/urls.json'
-import { error } from 'console';
 
 class SearchPage{
     readonly page: Page;
-    readonly homepageUrl: string = urls.prodUrl;
-    readonly homepageTitle: string = 'Campspot - Campgrounds, RV resorts, glamping, and more.';
+    readonly homePageUrl: string = urls.prodUrl;
+    readonly homePageTitle: string = 'Campspot - Campgrounds, RV resorts, glamping, and more.';
+    readonly resultPageTitlePrefix = 'Available Locations near ';
     readonly locationControl: Locator;
     readonly datesControl: Locator;
     readonly guestsControl: Locator;
     readonly searchControl: Locator;
+    readonly resultListControl: Locator;
 
     public constructor (page: Page){
         this.page = page;
@@ -17,10 +18,11 @@ class SearchPage{
         this.datesControl = page.getByLabel('Check In Date: Add Dates');
         this.guestsControl = page.getByRole('button', { name: 'Adults' });
         this.searchControl = page.getByRole('button', { name: 'Search' });
+        this.resultListControl = page.locator('#geo-search-main>div>nav>ul');
     }
 
     async navigateHome(){
-        await this.page.goto(this.homepageUrl);
+        await this.page.goto(this.homePageUrl);
         await this.page.waitForLoadState('domcontentloaded');
     }
 
@@ -79,7 +81,7 @@ class SearchPage{
     }
 
     async validatePageStartState(){
-        expect(await this.page.title()).toBe(this.homepageTitle);
+        expect(await this.page.title()).toBe(this.homePageTitle);
         expect(await this.locationControl.innerText()).toBe('');
         expect(await this.page.locator("//div[@class='guests-picker-input-text app-guest-categories-label']").innerText()).toBe('2 Adults');
     }
@@ -87,14 +89,14 @@ class SearchPage{
     async validateSearchHasNoResults(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
-        expect(await this.page.title()).toContain('Available Locations near ');
+        expect(await this.page.title()).toContain(this.resultPageTitlePrefix);
         expect(await this.page.locator("#geo-search-main>div>nav>div.search-results-none.app-no-search-results").innerText()).toBe('Sorry, there are no campgrounds available matching your current search.');
     }
     
     async validateSearchHasResults(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
-        expect(await this.page.title()).toContain('Available Locations near ');
+        expect(await this.page.title()).toContain(this.resultPageTitlePrefix);
         expect(await this.page.locator('#geo-search-main>div>nav>ul')).toHaveCount(1);        
     }
 
