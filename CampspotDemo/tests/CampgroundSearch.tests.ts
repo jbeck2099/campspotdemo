@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test'
 import { test, campLocations } from '../fixtures/fixtures'
+import moment from 'moment';
 import { randomInt } from '../helpers'
 let dates = require('../data/date-ranges.json')
 
@@ -33,7 +34,10 @@ test.describe('Location Tests', () => {
 //     for (const date of dates){
 //         test(`Testing '${date.testName}'`, async({searchPage}) => {
 //             await searchPage.navigateHome();
+//             let startDate = moment().add(date.offset, 'days');
             
+
+
 
 
 //             await searchPage.specifyLocation(campLocations[randomInt(0, campLocations.length - 1)]) //choose a random location

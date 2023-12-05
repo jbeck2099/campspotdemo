@@ -5,19 +5,28 @@ class SearchPage{
     readonly page: Page;
     readonly homePageUrl: string = urls.prodUrl;
     readonly homePageTitle: string = 'Campspot - Campgrounds, RV resorts, glamping, and more.';
-    readonly resultPageTitlePrefix = 'Available Locations near ';
+    readonly resultPageTitlePrefix: string = 'Available Locations near ';
+    readonly noResultsMessage: string = 'Sorry, there are no campgrounds available matching your current search.';
+    readonly noResultsDivLocator: string = '#geo-search-main>div>nav>div.search-results-none.app-no-search-results';
+    readonly guestsTextLocator: string = "//div[@class='guests-picker-input-text app-guest-categories-label']";
     readonly locationControl: Locator;
     readonly datesControl: Locator;
+    readonly nextMonthControl: Locator;
+    readonly previousMonthControl: Locator;
     readonly guestsControl: Locator;
     readonly searchControl: Locator;
+    readonly updateControl: Locator;
     readonly resultListControl: Locator;
 
     public constructor (page: Page){
         this.page = page;
         this.locationControl = page.getByPlaceholder('Where do you want to go?');
         this.datesControl = page.getByLabel('Check In Date: Add Dates');
+        this.nextMonthControl = page.getByLabel('Next Month');
+        this.previousMonthControl = page.getByLabel('Previous Month');
         this.guestsControl = page.getByRole('button', { name: 'Adults' });
         this.searchControl = page.getByRole('button', { name: 'Search' });
+        this.updateControl = page.getByLabel('Update Search');
         this.resultListControl = page.locator('#geo-search-main>div>nav>ul');
     }
 
@@ -56,12 +65,17 @@ class SearchPage{
     }
 
     async selectDateRange(startDate: string, endDate: string){
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000); //should be able to remove this
         await this.datesControl.click();
+
+
+
+
+
         //hard-coding date ranges for now...
-        await this.page.getByLabel('Next Month').click();
-        await this.page.getByLabel('Select Check-In Date Mon, Jan 1,').click();
-        await this.page.getByLabel('Select Check-Out Date Wed, Jan 3,').click();
+        // await this.page.getByLabel('Next Month').click();
+        // await this.page.getByLabel('Select Check-In Date Mon, Jan 1,').click();
+        // await this.page.getByLabel('Select Check-Out Date Wed, Jan 3,').click();
     }
 
     async selectGuests(adults: number, children: number, pets: number){
@@ -69,8 +83,14 @@ class SearchPage{
     }
 
     async clickSearch(){
-        await this.page.waitForTimeout(1000);
-        await this.searchControl.click();
+        await this.page.waitForTimeout(1000); //should be able to remove this
+
+        if (await this.page.title() == this.homePageTitle){
+            await this.searchControl.click();
+        }
+        else{
+            await this.updateControl.click(); //not tested yet
+        }        
     }
 
     async searchForCampsites(location: string, startDate: string, endDate: string, adults: number, children: number, pets: number){
@@ -83,21 +103,21 @@ class SearchPage{
     async validatePageStartState(){
         expect(await this.page.title()).toBe(this.homePageTitle);
         expect(await this.locationControl.innerText()).toBe('');
-        expect(await this.page.locator("//div[@class='guests-picker-input-text app-guest-categories-label']").innerText()).toBe('2 Adults');
+        expect(await this.page.locator(this.guestsTextLocator).innerText()).toBe('2 Adults');
     }
 
     async validateSearchHasNoResults(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
         expect(await this.page.title()).toContain(this.resultPageTitlePrefix);
-        expect(await this.page.locator("#geo-search-main>div>nav>div.search-results-none.app-no-search-results").innerText()).toBe('Sorry, there are no campgrounds available matching your current search.');
+        expect(await this.page.locator(this.noResultsDivLocator).innerText()).toBe(this.noResultsMessage);
     }
     
     async validateSearchHasResults(){
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
         expect(await this.page.title()).toContain(this.resultPageTitlePrefix);
-        expect(await this.page.locator('#geo-search-main>div>nav>ul')).toHaveCount(1);        
+        expect(await this.resultListControl).toHaveCount(1);        
     }
 
 }
