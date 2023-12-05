@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test'
 import { test, campLocations } from '../fixtures/fixtures'
 
 // test.describe('Default State/Behavior Tests', () => {
@@ -16,7 +17,8 @@ test.describe('Location Tests', () => { //suspect failures have to do with (re)h
     for (const location of campLocations){
         test(`Testing location '${location}'`, async({searchPage}) => {
             await searchPage.navigateHome();
-            await searchPage.specifyLocation(location);
+            let specifiedLocation = await searchPage.specifyLocation(location);
+            expect(specifiedLocation).toBe(true);
             await searchPage.clickSearch();
             await searchPage.validateSearchHasResults();
         });

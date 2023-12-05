@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test'
 import * as urls from '../data/urls.json'
+import { error } from 'console';
 
 class SearchPage{
     readonly page: Page;
@@ -45,11 +46,11 @@ class SearchPage{
 
             if (await this.page.locator('.location-search-results').isVisible()){
                 await this.page.locator('.location-search-results-location-0').click();
-                break;
+                return true;
             }
 
             currentRetryCount++;
-        }
+        }        
     }
 
     async selectDateRange(startDate: string, endDate: string){
