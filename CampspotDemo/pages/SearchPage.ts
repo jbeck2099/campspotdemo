@@ -50,7 +50,7 @@ class SearchPage{
             }
 
             currentRetryCount++;
-        }        
+        }
     }
 
     async selectDateRange(startDate: string, endDate: string){

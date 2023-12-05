@@ -1,0 +1,32 @@
+[
+    {
+        "testName": "Book all days in the past",
+        "relativeStartDate": -7,
+        "dateRange": 3
+    },
+    {
+        "testName": "Book some days in the past",
+        "relativeStartDate": -2,
+        "dateRange": 3
+    },
+    {
+        "testName": "Book starting tomorrow",
+        "relativeStartDate": 1,
+        "dateRange": 3
+    },
+    {
+        "testName": "Book in a week",
+        "relativeStartDate": 7,
+        "dateRange": 3
+    },
+    {
+        "testName": "Book in a month",
+        "relativeStartDate": 30,
+        "dateRange": 3
+    },
+    {
+        "testName": "Book in a year",
+        "relativeStartDate": 365,
+        "dateRange": 3
+    }
+]
