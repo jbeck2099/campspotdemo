@@ -3,7 +3,7 @@ import * as urls from '../data/urls.json'
 
 class SearchPage{
     readonly page: Page;
-    readonly homepageUrl: string = urls.testurl;
+    readonly homepageUrl: string = urls.prodUrl;
     readonly homepageTitle: string = 'Campspot - Campgrounds, RV resorts, glamping, and more.';
     readonly locationControl: Locator;
     readonly datesControl: Locator;
@@ -30,7 +30,15 @@ class SearchPage{
 
     async specifyLocation(location: string){
         
+        let maxRetryCount = 3;
+        let currentRetryCount = 0;
+        
         while (!(await this.locationControl.innerText()).includes(location)){
+            
+            if (currentRetryCount == maxRetryCount){
+                return false;
+            }
+            
             await this.locationControl.click();
             await this.locationControl.fill(location);
             await this.page.waitForTimeout(3000)
@@ -39,6 +47,8 @@ class SearchPage{
                 await this.page.locator('.location-search-results-location-0').click();
                 break;
             }
+
+            currentRetryCount++;
         }
     }
 
@@ -75,14 +85,16 @@ class SearchPage{
 
     async validateSearchHasNoResults(){
         await this.page.waitForLoadState('domcontentloaded');
-        // expect(await this.page.title()).toContain('Available Locations near ');
+        await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
+        expect(await this.page.title()).toContain('Available Locations near ');
         expect(await this.page.locator("#geo-search-main>div>nav>div.search-results-none.app-no-search-results").innerText()).toBe('Sorry, there are no campgrounds available matching your current search.');
     }
     
     async validateSearchHasResults(){
         await this.page.waitForLoadState('domcontentloaded');
-        // expect(await this.page.title()).toContain('Available Locations near ');
-        expect(await this.page.locator('#geo-search-main>div>nav>ul')).toHaveCount(1);
+        await this.page.waitForTimeout(2000); //bandaid while figuring out rehydration issue
+        expect(await this.page.title()).toContain('Available Locations near ');
+        expect(await this.page.locator('#geo-search-main>div>nav>ul')).toHaveCount(1);        
     }
 
 }
